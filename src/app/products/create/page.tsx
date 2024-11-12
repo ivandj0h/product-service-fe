@@ -4,18 +4,34 @@ import { useState } from "react";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function CreateProductPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [description, setDescription] = useState("");
 
   const createProduct = async () => {
     try {
-      await api.post("/products", { name, price, description });
-      window.location.href = "/products";
+      await api.post("/products", {
+        name,
+        price,
+        description,
+      });
+      toast({
+        title: "Success",
+        description: "Product created successfully and moved to pending list.",
+      });
+      router.push("/products/pending");
     } catch (error) {
       console.error("Error creating product:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create product. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 

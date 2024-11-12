@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,30 +24,31 @@ interface Product {
   status: string;
 }
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+export default function RejectedProductsPage() {
+  const [rejectedProducts, setRejectedProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
-  const router = useRouter();
 
-  const fetchApprovedProducts = async () => {
+  const fetchRejectedProducts = async () => {
     try {
       const response = await api.get("/products");
-      const approvedProducts = response.data.data.filter(
-        (product: Product) => product.status === "APPROVED"
+      const rejectedProducts = response.data.data.filter(
+        (product: Product) => product.status === "REJECTED"
       );
-      setProducts(approvedProducts);
+      setRejectedProducts(rejectedProducts);
     } catch (error) {
-      console.error("Error fetching approved products:", error);
+      console.error("Error fetching rejected products:", error);
     }
   };
 
   const handleDelete = async () => {
     try {
       await api.delete(`/products/${selectedProductId}`);
-      setProducts(
-        products.filter((product) => product.id !== selectedProductId)
+      setRejectedProducts(
+        rejectedProducts.filter(
+          (product) => product.id !== selectedProductId
+        )
       );
       setSelectedProductId(null);
       toast({
@@ -66,12 +66,12 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    fetchApprovedProducts();
+    fetchRejectedProducts();
   }, []);
 
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-5">Product List</h1>
+      <h1 className="text-2xl font-bold mb-5">Rejected Products</h1>
       <table className="table-auto w-full border-collapse">
         <thead>
           <tr>
@@ -83,7 +83,7 @@ export default function ProductsPage() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {rejectedProducts.map((product, index) => (
             <tr key={product.id} className="hover:bg-gray-50">
               <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
               <td className="border border-gray-300 px-4 py-2">
@@ -96,13 +96,6 @@ export default function ProductsPage() {
                 {product.description}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                <Button
-                  variant="secondary"
-                  className="mr-2"
-                  onClick={() => router.push(`/products/${product.id}`)}
-                >
-                  Edit
-                </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
