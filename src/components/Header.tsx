@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Header() {
   const pathname = usePathname();
@@ -13,7 +14,7 @@ export default function Header() {
       <nav className="flex items-center space-x-6">
         <ul className="flex space-x-6">
           <li>
-            <a
+            <Link
               href="/products"
               className={`px-4 py-2 rounded-md ${
                 pathname === "/products"
@@ -22,10 +23,10 @@ export default function Header() {
               }`}
             >
               Products
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/products/pending"
               className={`px-4 py-2 rounded-md ${
                 pathname === "/products/pending"
@@ -34,10 +35,10 @@ export default function Header() {
               }`}
             >
               Pending Products
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/products/rejected"
               className={`px-4 py-2 rounded-md ${
                 pathname === "/products/rejected"
@@ -46,7 +47,7 @@ export default function Header() {
               }`}
             >
               Rejected Products
-            </a>
+            </Link>
           </li>
         </ul>
         <Button
